@@ -1,0 +1,76 @@
+{
+  "name": "@openenergytools/ocl-validator",
+  "version": "1.0.0",
+  "description": "IEC 61850 OCL (Object Constraint Language) validator for SCL files. Validates XML documents against OCL rules for substation configuration language.",
+  "license": "Apache-2.0",
+  "author": "Jakob Vogelsang",
+  "homepage": "https://github.com/OpenEnergyTools/ocl-validator#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpenEnergyTools/ocl-validator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/OpenEnergyTools/ocl-validator/issues"
+  },
+  "keywords": [
+    "IEC61850",
+    "SCL",
+    "OCL",
+    "validation",
+    "substation",
+    "smart-grid",
+    "energy",
+    "power"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "type": "module",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "scripts": {
+    "build": "npm run build:validate",
+    "build:validate": "npm run clean && tsc -p tsconfig.validate.json && tsc -p tsconfig.validate.json --outDir ./dist/esm --module ES2020",
+    "clean": "rm -rf dist",
+    "prepack": "npm run build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:required-elements": "vitest run test/RequiredElements/",
+    "lint": "eslint . --max-warnings 0",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"src/validate.ts\" \"src/ValidationIssue.ts\" \"src/index.ts\" \"src/RequiredElements/**/*.ts\" \"test/validate*.ts\"",
+    "format:check": "prettier --check \"src/validate.ts\" \"src/ValidationIssue.ts\" \"src/index.ts\" \"src/RequiredElements/**/*.ts\" \"test/validate*.ts\"",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.71.0",
+    "@typescript-eslint/parser": "^8.71.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "jsdom": "^26.1.0",
+    "prettier": "^3.9.9",
+    "typescript": "^6.0.3",
+    "vitest": "^3.2.4"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "gitHead": "auto"
+}
