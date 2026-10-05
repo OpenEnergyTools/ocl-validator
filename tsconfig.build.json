@@ -1,0 +1,26 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "types": [],
+        "declarationMap": true,
+        "outDir": "./dist",
+        "rootDir": "./src"
+    },
+    "include": [
+        "src/index.ts",
+        "src/validate.ts",
+        "src/ValidationIssue.ts",
+        "src/RequiredElements/**/*",
+        "src/Helpers/BaseSimpleTypes.ts",
+        "src/Helpers/Enums.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "test",
+        "src/RequiredAttributes/**/*",
+        "src/SemanticConstraints/**/*", 
+        "src/FileSpecifics/**/*",
+        "src/Helpers/GetFileType.ts"
+    ]
+}
