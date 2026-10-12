@@ -19,15 +19,48 @@ export const CONDUCTING_EQUIPMENT_TYPES = new Set([
 ]);
 
 // Valid LNClass enum values
+// System LN Group + Domain LN Groups from OCL Helpers/Enums.ocl
 export const LN_CLASS_ENUM = new Set([
-    'LLN0', 'LPHD', 'LNOD', 'TVTR', 'TCTR', 'TCLK', 'TRES', 'TWPI', 'TWPP', 
-    'TPOS', 'TSPT', 'TPAS', 'TMPS', 'TAMV', 'TAMP', 'TVLV', 'TWQI', 'TWQP',
+    // System LN Group
+    'LLN0', 'LPHD', 'LCCH', 'LGOS', 'LSVS', 'LTIM', 'LTMS', 'LTRK',
+    // Domain A
+    'ANCR', 'ARCO', 'ARIS', 'ATCC', 'AVCO',
+    // Domain C
+    'CALH', 'CCGR', 'CILO', 'CPOW', 'CSWI', 'CSYN',
+    // Domain F
+    'FCNT', 'FCSD', 'FFIL', 'FLIM', 'FPID', 'FRMP', 'FSPT', 'FXOT', 'FXUT',
+    // Domain G
+    'GAPC', 'GGIO', 'GLOG', 'GSAL',
+    // Domain I
+    'IARC', 'IHMI', 'ISAF', 'ITCI', 'ITMI', 'ITPC',
+    // Domain K
+    'KFAN', 'KFIL', 'KPMP', 'KTNK', 'KVLV',
+    // Domain M
+    'MHAI', 'MHAN', 'MHYD', 'MMDC', 'MMET', 'MMTN', 'MMTR', 'MMXN', 'MMXU', 'MSQI', 'MSTA',
+    // Domain P
+    'PDIF', 'PDIR', 'PDIS', 'PDOP', 'PDUP', 'PFRC', 'PHAR', 'PHIZ', 'PIOC', 'PMRI', 'PMSS', 'POPF', 'PPAM', 'PRTR', 'PSCH', 'PSDE', 'PTEF', 'PTHF', 'PTOC', 'PTOF', 'PTOV', 'PTRC', 'PTTR', 'PTUC', 'PTUF', 'PTUV', 'PUPF',
+    // Domain Q
+    'QFVR', 'QITR', 'QIUB', 'QVTR', 'QVUB', 'QVVR',
+    // Domain R
+    'RADR', 'RBDR', 'RBRF', 'RDIR', 'RDRE', 'RDRS', 'RFLO', 'RMXU', 'RPSB', 'RREC', 'RSYN',
+    // Domain S
+    'SARC', 'SCBR', 'SIMG', 'SIML', 'SLTC', 'SOPM', 'SPDC', 'SPTR', 'SSWI', 'STMP', 'SVBR',
+    // Domain T
+    'TANG', 'TAXD', 'TDST', 'TFLW', 'TGSN', 'THUM', 'TLVL', 'TMGF', 'TMVM', 'TPRS', 'TRTN', 'TSND', 'TTMP', 'TTNS', 'TVBR', 'TVTR', 'TWPH',
+    // Domain X
+    'XCBR', 'XSWI',
+    // Domain Y
+    'YEFN', 'YLTC', 'YPSH', 'YPTR',
+    // Domain Z
+    'ZAXN', 'ZBAT', 'ZBSH', 'ZCAB', 'ZCAP', 'ZCON', 'ZGEN', 'ZGIL', 'ZLIN', 'ZMOT', 'ZREA', 'ZRES', 'ZRRC', 'ZSAR', 'ZSCR', 'ZSMC', 'ZTCF', 'ZTCR',
+    // Existing values from original set (not in OCL domain groups but used in practice)
+    'LNOD', 'TCTR', 'TCLK', 'TRES', 'TWPI', 'TWPP', 'TPOS', 'TSPT', 'TPAS', 'TMPS', 'TAMV', 'TAMP', 'TVLV', 'TWQI', 'TWQP',
     'TFLV', 'TFLP', 'TFLQ', 'TFFQ', 'TFRQ', 'TITV', 'TITQ', 'TITP', 'TITF',
     'BB00', 'BBO1', 'BBO2', 'BBO3', 'BRCB', 'BBRB', 'DIR', 'DOP', 'DOI', 'DOC',
-    'CSWI', 'XCBR', 'XSWI', 'CSWI2', 'XCBR2', 'XSWI2', 'CSWI3', 'XCBR3', 'XSWI3',
+    'CSWI2', 'XCBR2', 'XSWI2', 'CSWI3', 'XCBR3', 'XSWI3',
     'SGCB', 'XSGC', 'CSGR', 'XSGR', 'MXGR', 'XMXG', 'AGCS', 'XGCS', 'ACSE',
-    'CSAC', 'XSAC', 'ATCC', 'XATC', 'TCTR', 'TVTR', 'DRCS', 'XDRC', 'RDRE',
-    'XDRE', 'RDRS', 'XRDR', 'RREC', 'XRRC', 'CILO', 'XCIL', 'SPC', 'XSPC',
+    'CSAC', 'XSAC', 'XATC', 'DRCS', 'XDRC',
+    'RDRE', 'XDRE', 'RDRS', 'XRDR',
     'RSPC', 'XRPC', 'SEL', 'XSEL', 'SRGC', 'XSGC', 'SICF', 'XSIC', 'SICC',
     'XSIC2', 'SICC2', 'XSIC3', 'SICC3', 'SIMG', 'XSIM', 'SIMC', 'XSIC4', 'SICC4'
 ]);
@@ -81,8 +114,8 @@ export function validSclLNClassEnum(lnClass: string): boolean {
     return LN_CLASS_ENUM.has(lnClass);
 }
 
-// Valid prefix pattern: alphanumeric and special characters
-export const PREFIX_PATTERN = /^[a-zA-Z0-9_\-]{0,4}$/;
+// Valid prefix pattern from OCL BaseSimpleTypes.ocl: empty string OR [A-Za-z][0-9A-Za-z_]{0,10}
+export const PREFIX_PATTERN = /^(|[A-Za-z][0-9A-Za-z_]{0,10})$/;
 
 // Validate prefix
 export function validSclPrefix(prefix: string): boolean {

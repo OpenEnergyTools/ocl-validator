@@ -71,6 +71,7 @@ describe('validate function', () => {
             const doc = parseXMLString(validSCL);
             const issues = await validateAll(doc, {
                 filename: DOC_NAME,
+                filter: { element_specific: false },
             });
 
             expect(Array.isArray(issues)).toBe(true);
@@ -82,6 +83,7 @@ describe('validate function', () => {
             const doc = parseXMLString(validSCL);
             const issues = await validateAll(doc, {
                 filename: DOC_NAME,
+                filter: { attributes_specific: false },
             });
 
             expect(Array.isArray(issues)).toBe(true);
@@ -91,6 +93,7 @@ describe('validate function', () => {
             const doc = parseXMLString(validSCL);
             const issues = await validateAll(doc, {
                 filename: DOC_NAME,
+                filter: { semantic_checks: false },
             });
 
             expect(Array.isArray(issues)).toBe(true);
@@ -100,6 +103,7 @@ describe('validate function', () => {
             const doc = parseXMLString(validSCL);
             const issues = await validateAll(doc, {
                 filename: DOC_NAME,
+                filter: { file_specific: false },
             });
 
             expect(Array.isArray(issues)).toBe(true);
