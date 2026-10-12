@@ -1,6 +1,7 @@
 import { ValidationIssue } from './ValidationIssue';
 import * as requiredElements from './RequiredElements';
 import * as requiredAttributes from './RequiredAttributes';
+import * as semanticConstraints from './SemanticConstraints';
 
 export type ValidationOptions = {
     filename?: string;
@@ -31,6 +32,7 @@ export async function* validate(
     const categories = [
         { enabled: filter.element_specific !== false, run: () => runRequiredElements(scl, filename) },
         { enabled: filter.attributes_specific !== false, run: () => runRequiredAttributes(scl, filename) },
+        { enabled: filter.semantic_checks !== false, run: () => runSemanticConstraints(scl, filename) },
     ];
 
     // Run all enabled categories in parallel
@@ -74,6 +76,25 @@ async function runRequiredElements(scl: XMLDocument, filename: string): Promise<
  */
 async function runRequiredAttributes(scl: XMLDocument, filename: string): Promise<ValidationIssue[]> {
     const ruleFunctions = Object.values(requiredAttributes).filter(
+        (fn): fn is (doc: XMLDocument, name: string) => ValidationIssue[] => typeof fn === 'function'
+    );
+
+    // Run all RequiredAttributes rules in parallel
+    const results = await Promise.all(ruleFunctions.map((rule) => rule(scl, filename)));
+
+    // Flatten the array of arrays into a single array
+    return results.flat();
+}
+
+/**
+ * Runs all SemanticConstraints validation functions in parallel.
+ *
+ * @param scl - The XMLDocument to validate
+ * @param filename - The filename to include in validation issues
+ * @returns Promise resolving to all issues found
+ */
+async function runSemanticConstraints(scl: XMLDocument, filename: string): Promise<ValidationIssue[]> {
+    const ruleFunctions = Object.values(semanticConstraints).filter(
         (fn): fn is (doc: XMLDocument, name: string) => ValidationIssue[] => typeof fn === 'function'
     );
 
