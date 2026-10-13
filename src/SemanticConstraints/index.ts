@@ -1,12 +1,12 @@
 // SemanticConstraints index - exports all semantic constraint validation functions
 //
 export * from './AbstractConductingEquipment';
+export * from './AbstractDataObject';
 // export * from './Bay';
 // export * from './ConductingEquipment';
 // export * from './SCL';
 //
 // Add more exports as files are created
-// export * from './AbstractDataObject';
 // export * from './AnyLN';
 // export * from './Association';
 // export * from './BDA';
