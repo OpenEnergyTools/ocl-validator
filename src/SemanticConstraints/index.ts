@@ -12,7 +12,7 @@
 // export * from './BDA';
 // export * from './ClientLN';
 export * from './Communication';
-// export * from './ConnectedAP';
+export * from './ConnectedAP';
 // export * from './ConnectivityNode';
 // export * from './Control';
 // export * from './ControlBlock';
