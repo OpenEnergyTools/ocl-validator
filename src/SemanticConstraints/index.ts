@@ -1,6 +1,6 @@
 // SemanticConstraints index - exports all semantic constraint validation functions
 //
-// export * from './AbstractConductingEquipment';
+export * from './AbstractConductingEquipment';
 // export * from './Bay';
 // export * from './ConductingEquipment';
 // export * from './SCL';
