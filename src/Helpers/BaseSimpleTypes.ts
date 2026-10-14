@@ -65,3 +65,25 @@ export function findReferencedServerLN(scl: XMLDocument, ref: Element): Element 
         return true;
     }) || null;
 }
+
+/**
+ * Resolves an LN reference (iedName/ldInst/prefix/lnClass/lnInst attributes,
+ * as used by Association, ClientLN, ...) to an LN0 or LN element.
+ * Returns null when the reference cannot be resolved.
+ */
+export function findReferencedClientLN(scl: XMLDocument, ref: Element): Element | null {
+
+    const iedName = getAttributeValue(ref, 'iedName');
+    const apRef = getAttributeValue(ref, 'apRef');
+    const prefix = getAttributeValue(ref, 'prefix');
+    const lnClass = getAttributeValue(ref, 'lnClass');
+    const lnInst = getAttributeValue(ref, 'lnInst');
+
+    const selectorAnyLN = `IED[name="${iedName}"] > AccessPoint[name="${apRef}"] > Server > LDevice > LN0[lnClass="${lnClass}"], IED[name="${iedName}"] > AccessPoint[name="${apRef}"] > Server > LDevice > LN[lnClass="${lnClass}"]`;
+
+    return Array.from(scl.querySelectorAll(selectorAnyLN)).find(ln => {
+        if (prefix !== getAttributeValue(ln, 'prefix')) return false;
+        if (lnInst !== getAttributeValue(ln, 'inst')) return false;
+        return true;
+    }) || null;
+}
