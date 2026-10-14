@@ -7,14 +7,11 @@ export * from './Association';
 // export * from './Bay';
 export * from './BDA';
 export * from './ClientLN';
-// export * from './ConductingEquipment';
-// export * from './SCL';
-//
-// Add more exports as files are created
 export * from './Communication';
+// export * from './ConductingEquipment';
+export * from './Control';
 export * from './ConnectedAP';
 // export * from './ConnectivityNode';
-// export * from './Control';
 // export * from './ControlBlock';
 // export * from './DA';
 // export * from './DAI';
@@ -43,6 +40,7 @@ export * from './ConnectedAP';
 // export * from './ReportControl';
 // export * from './SDI';
 // export * from './SampledValueControl';
+// export * from './SCL';
 // export * from './Server';
 // export * from './ServerAt';
 // export * from './SubEquipment';
