@@ -8,9 +8,7 @@ const selector = [
 
 // Rule: ClientLN_RefersToLNodeType
 export function ClientLN_RefersToLNodeType(scl: XMLDocument, docName: string): ValidationIssue[] {
-    return Array.from(
-        scl.querySelectorAll(selector.join(','))
-    )
+    return Array.from(scl.querySelectorAll(selector.join(',')))
         .filter((clientLN) => !findReferencedClientLN(scl, clientLN))
         .map((clientLN) => ({
             severity: 'ERROR',

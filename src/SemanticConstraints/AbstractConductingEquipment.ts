@@ -5,11 +5,15 @@ import { ValidationIssue } from '../ValidationIssue';
  * ConductingEquipment and TransformerWinding are concrete implementations of AbstractConductingEquipment
  * Rule: AbstractConductingEquipment_unique_name_of_SubEquipment
  */
-export function AbstractConductingEquipment_unique_name_of_SubEquipment(scl: XMLDocument, docName: string): ValidationIssue[] {
+export function AbstractConductingEquipment_unique_name_of_SubEquipment(
+    scl: XMLDocument,
+    docName: string
+): ValidationIssue[] {
     return Array.from(scl.querySelectorAll(':root ConductingEquipment, :root TransformerWinding'))
-        .filter(ace => {
-            const names = Array.from(ace.querySelectorAll(':scope > SubEquipment'))
-                .map(se => se.getAttribute('name') || '');
+        .filter((ace) => {
+            const names = Array.from(ace.querySelectorAll(':scope > SubEquipment')).map(
+                (se) => se.getAttribute('name') || ''
+            );
             return new Set(names).size !== names.length;
         })
         .map((ace): ValidationIssue => ({

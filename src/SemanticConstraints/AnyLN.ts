@@ -1,7 +1,8 @@
 import { areNamesUnique } from '../Helpers/BaseSimpleTypes';
 import { ValidationIssue } from '../ValidationIssue';
 
-const selector = ':root > IED > AccessPoint > LN, :root > IED > AccessPoint > Server > LDevice >LN0, :root > IED > AccessPoint > Server > LDevice > LN';
+const selector =
+    ':root > IED > AccessPoint > LN, :root > IED > AccessPoint > Server > LDevice >LN0, :root > IED > AccessPoint > Server > LDevice > LN';
 // Rule: AnyLN_LogControl_name_unique
 export function AnyLN_LogControl_name_unique(scl: XMLDocument, docName: string): ValidationIssue[] {
     return Array.from(scl.querySelectorAll(selector))

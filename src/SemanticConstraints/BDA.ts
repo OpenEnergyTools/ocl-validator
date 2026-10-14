@@ -30,7 +30,9 @@ export function BDA_RefersToDATypeorEnumType(scl: XMLDocument, docName: string):
                 return refersToDAType && !dataTypeTemplates?.querySelector(`:scope > DAType[id="${refersToDAType}"]`);
             } else if (bType === 'Enum') {
                 const refersToEnumType = getAttributeValue(bda, 'type');
-                return refersToEnumType && !dataTypeTemplates?.querySelector(`:scope > EnumType[id="${refersToEnumType}"]`);
+                return (
+                    refersToEnumType && !dataTypeTemplates?.querySelector(`:scope > EnumType[id="${refersToEnumType}"]`)
+                );
             }
             return false;
         })

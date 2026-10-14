@@ -36,9 +36,7 @@ export async function* validate(
     ];
 
     // Run all enabled categories in parallel
-    const results = await Promise.all(
-        categories.filter((c) => c.enabled).map((c) => c.run())
-    );
+    const results = await Promise.all(categories.filter((c) => c.enabled).map((c) => c.run()));
 
     // Yield each category's results if they have issues
     for (const issues of results) {
