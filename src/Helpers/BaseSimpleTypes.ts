@@ -48,33 +48,20 @@ export function areUnique<T>(elements: NodeListOf<Element> | HTMLCollectionOf<El
  * as used by Association, ClientLN, ...) to an LN0 or LN element.
  * Returns null when the reference cannot be resolved.
  */
-export function findReferencedLN(scl: XMLDocument, ref: Element): Element | null {
+export function findReferencedServerLN(scl: XMLDocument, ref: Element): Element | null {
+
     const iedName = getAttributeValue(ref, 'iedName');
     const ldInst = getAttributeValue(ref, 'ldInst');
     const prefix = getAttributeValue(ref, 'prefix');
     const lnClass = getAttributeValue(ref, 'lnClass');
     const lnInst = getAttributeValue(ref, 'lnInst');
 
-    const scope = iedName ? scl.querySelector(`IED[name="${iedName}"]`) : ref.closest('IED');
-    if (!scope) return null;
+    const base = `:root > IED[name="${iedName}"] > AccessPoint > Server > LDevice[inst="${ldInst}"] > `;
+    const selectorAnyLN = `${base}LN0[lnClass="${lnClass}"], ${base}LN[lnClass="${lnClass}"]`;
 
-    const lDevices = scope.querySelectorAll('LDevice');
-    for (let i = 0; i < lDevices.length; i++) {
-        if (getAttributeValue(lDevices[i], 'inst') !== ldInst) continue;
-
-        const lns = lDevices[i].querySelectorAll('LN0, LN');
-        for (let j = 0; j < lns.length; j++) {
-            const ln = lns[j];
-            const isLN0 = ln.tagName === 'LN0';
-            const classMatches = isLN0 ? lnClass === 'LLN0' : getAttributeValue(ln, 'lnClass') === lnClass;
-            const instMatches = isLN0 ? lnInst === '' : getAttributeValue(ln, 'inst') === lnInst;
-            const prefixMatches = getAttributeValue(ln, 'prefix') === prefix;
-
-            if (classMatches && instMatches && prefixMatches) {
-                return ln;
-            }
-        }
-    }
-
-    return null;
+    return Array.from(scl.querySelectorAll(selectorAnyLN)).find(ln => {
+        if (prefix !== getAttributeValue(ln, 'prefix')) return false;
+        if (lnInst !== getAttributeValue(ln, 'inst')) return false;
+        return true;
+    }) || null;
 }
