@@ -5,11 +5,11 @@ export * from './AbstractDataObject';
 export * from './AnyLN';
 export * from './Association';
 // export * from './Bay';
+export * from './BDA';
 // export * from './ConductingEquipment';
 // export * from './SCL';
 //
 // Add more exports as files are created
-// export * from './BDA';
 // export * from './ClientLN';
 export * from './Communication';
 export * from './ConnectedAP';
