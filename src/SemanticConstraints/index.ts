@@ -12,7 +12,7 @@ export * from './Communication';
 export * from './Control';
 export * from './ConnectedAP';
 export * from './ControlBlock';
-// export * from './DA';
+export * from './DA';
 // export * from './DAI';
 // export * from './DAType';
 // export * from './DOI';
