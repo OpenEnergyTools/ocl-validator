@@ -15,7 +15,7 @@ export * from './ControlBlock';
 export * from './DA';
 export * from './DAI';
 export * from './DAType';
-// export * from './DOI';
+export * from './DOI';
 // export * from './DOType';
 // export * from './EquipmentContainer';
 // export * from './FCDA';

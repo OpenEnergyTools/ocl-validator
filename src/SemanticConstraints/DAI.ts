@@ -1,4 +1,4 @@
-import { findReferencedDA, getAttributeValue } from '../Helpers/BaseSimpleTypes';
+import { findReferencedDataType, getAttributeValue } from '../Helpers/BaseSimpleTypes';
 import { ValidationIssue } from '../ValidationIssue';
 
 // Rule: DAI_RefersToAbstractDataAttribute
@@ -6,7 +6,7 @@ export function DAI_RefersToAbstractDataAttribute(scl: XMLDocument, docName: str
     return Array.from(scl.querySelectorAll('DAI'))
         .filter((dai) => {
             const name = getAttributeValue(dai, 'name');
-            return name && !findReferencedDA(scl, dai);
+            return name && !findReferencedDataType(scl, dai);
         })
         .map((dai) => ({
             severity: 'ERROR',
