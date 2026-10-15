@@ -94,21 +94,50 @@ export function findReferencedClientLN(scl: XMLDocument, ref: Element): Element 
  * and finds corresponding: LNodeType > DO > DOType > DO(SDO*) > DOType > DA (or nested in DAType > BDA)
  * Returns null when the reference cannot be resolved.
  */
-export function findReferencedDataType(scl: XMLDocument, doiOrSdiOrDai: Element): Element | null {
+export function findReferencedDataType(scl: XMLDocument, doiOrSdiOrDaiOrFcda: Element): Element | null {
 
     const dataTypeTemplates = scl.querySelector(':root > DataTypeTemplates');
     if (!dataTypeTemplates) return null;
 
-    const reference: string[] = [doiOrSdiOrDai.getAttribute('name') || ''];
-    let parent: Element | null = doiOrSdiOrDai.parentElement;
-    while (parent && !(parent.tagName === 'LN' || parent.tagName === 'LN0')) {
-        reference.unshift(parent.getAttribute('name') || '');
-        parent = parent.parentElement;
+    const reference: string[] = [];
+    let lnType: string = '';
+    if (doiOrSdiOrDaiOrFcda.tagName === 'FCDA') {
+        const fcda = doiOrSdiOrDaiOrFcda;
+        const iedName = getAttributeValue(fcda, 'iedName');
+        const ldInst = getAttributeValue(fcda, 'ldInst');
+        const prefix = getAttributeValue(fcda, 'prefix') || '';
+        const lnClass = getAttributeValue(fcda, 'lnClass');
+        const lnInst = getAttributeValue(fcda, 'lnInst') || '';
+        const doName = getAttributeValue(fcda, 'doName');
+        const daName = getAttributeValue(fcda, 'daName');
+
+        const selector = [
+            `:root > IED[name="${iedName}"] > AccessPoint > Server > LDevice[inst="${ldInst}"] > LN0[lnClass="${lnClass}"]`,
+            `:root > IED[name="${iedName}"] > AccessPoint > Server > LDevice[inst="${ldInst}"] > LN[lnClass="${lnClass}"]`
+        ];
+
+        lnType = Array.from(scl.querySelectorAll(selector.join(', '))).find(ln => {
+            if (prefix !== getAttributeValue(ln, 'prefix')) return false;
+            if (lnInst !== getAttributeValue(ln, 'inst')) return false;
+            return true;
+        })?.getAttribute('lnType') || '';
+
+        reference.push(...doName.split('.'));
+        if (!!daName) reference.push(...daName.split('.'));
+
+    } else {
+        const doiOrSdiOrDai = doiOrSdiOrDaiOrFcda;
+        reference.push(doiOrSdiOrDai.getAttribute('name') || '');
+        let parent: Element | null = doiOrSdiOrDai.parentElement;
+        while (parent && !(parent.tagName === 'LN' || parent.tagName === 'LN0')) {
+            reference.unshift(parent.getAttribute('name') || '');
+            parent = parent.parentElement;
+        }
+
+        lnType = doiOrSdiOrDai.closest('LN, LN0')?.getAttribute('lnType') || '';
     }
 
-    const lnType = doiOrSdiOrDai.closest('LN, LN0')?.getAttribute('lnType') || '';
     let dataType: Element | null = dataTypeTemplates?.querySelector(`:scope > LNodeType[id="${lnType}"]`) || null;
-
     for (const ref of reference) {
         if (!dataType) return null;
 
