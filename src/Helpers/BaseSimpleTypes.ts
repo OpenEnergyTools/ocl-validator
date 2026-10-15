@@ -87,3 +87,38 @@ export function findReferencedClientLN(scl: XMLDocument, ref: Element): Element 
         return true;
     }) || null;
 }
+
+/**
+ * Resolves a DA reference from DAI element in IED to DA in DataTypeTemplates.
+ * The function follows the path: LN/LN0 > DOI > (SDI*) > DAI
+ * and finds corresponding: LNodeType > DO > (SDO*) > DOType > DA (or nested in DAType > BDA)
+ * Returns null when the reference cannot be resolved.
+ */
+export function findReferencedDA(scl: XMLDocument, dai: Element): Element | null {
+
+    const dataTypeTemplates = scl.querySelector(':root > DataTypeTemplates');
+    if (!dataTypeTemplates) return null;
+
+    const reference: string[] = [dai.getAttribute('name') || ''];
+    let parent: Element | null = dai.parentElement;
+    while (parent && !(parent.tagName === 'LN' || parent.tagName === 'LN0')) {
+        reference.unshift(parent.getAttribute('name') || '');
+        parent = parent.parentElement;
+    }
+
+    const lnType = dai.closest('LN, LN0')?.getAttribute('lnType') || '';
+    let dataType: Element | null = dataTypeTemplates?.querySelector(`:scope > LNodeType[id="${lnType}"]`) || null;
+
+    for (const ref of reference) {
+        if (!dataType) return null;
+
+        let child: Element | null = dataType.querySelector(`:scope > DO[name="${ref}"], :scope > SDO[name="${ref}"], :scope > DA[name="${ref}"], :scope > BDA[name="${ref}"]`) || null;
+
+        if (!child) return null;
+        if (child && reference[reference.length - 1] === ref) return child;
+
+        dataType = dataTypeTemplates?.querySelector(`:scope >DOType[id="${child.getAttribute('type')}"], :scope > DAType[id="${child.getAttribute('type')}"]`) || null;
+    }
+
+    return null;
+}
