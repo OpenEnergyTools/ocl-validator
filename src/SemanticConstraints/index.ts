@@ -14,7 +14,7 @@ export * from './ConnectedAP';
 export * from './ControlBlock';
 export * from './DA';
 export * from './DAI';
-// export * from './DAType';
+export * from './DAType';
 // export * from './DOI';
 // export * from './DOType';
 // export * from './EquipmentContainer';
