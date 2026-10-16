@@ -20,7 +20,7 @@ export * from './DOI';
 // export * from './EquipmentContainer';
 export * from './FCDA';
 export * from './GSE';
-// export * from './GSEControl';
+export * from './GSEControl';
 // export * from './GeneralEquipment';
 // export * from './History';
 // export * from './IED';
