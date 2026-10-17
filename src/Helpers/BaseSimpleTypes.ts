@@ -79,7 +79,11 @@ export function findReferencedClientLN(scl: XMLDocument, ref: Element): Element 
     const lnClass = getAttributeValue(ref, 'lnClass');
     const lnInst = getAttributeValue(ref, 'lnInst');
 
-    const selectorAnyLN = `IED[name="${iedName}"] > AccessPoint[name="${apRef}"] > Server > LDevice > LN0[lnClass="${lnClass}"], IED[name="${iedName}"] > AccessPoint[name="${apRef}"] > Server > LDevice > LN[lnClass="${lnClass}"]`;
+    let selectorAnyLN = '';
+    if (!!apRef) 
+        selectorAnyLN = `IED[name="${iedName}"] > AccessPoint[name="${apRef}"] > LN[lnClass="${lnClass}"]`;
+    else 
+        selectorAnyLN = `IED[name="${iedName}"] > AccessPoint > LN[lnClass="${lnClass}"]`;
 
     return Array.from(scl.querySelectorAll(selectorAnyLN)).find(ln => {
         if (prefix !== getAttributeValue(ln, 'prefix')) return false;

@@ -2,6 +2,3 @@
 
 export * from './ValidationIssue';
 export * from './validate';
-
-// RequiredElements - these are working
-export * from './RequiredElements';

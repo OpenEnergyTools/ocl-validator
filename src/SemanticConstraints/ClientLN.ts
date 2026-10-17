@@ -31,8 +31,9 @@ export function ClientLN_Sender_and_receiver_not_in_same_subnetwork(
             if (!communication) return false;
 
             // Find Client SubNetwork
-            const iedName = getAttributeValue(clientLN, 'iedName');
-            const apRef = getAttributeValue(clientLN, 'apRef');
+            const clientLn = findReferencedClientLN(scl, clientLN);
+            const iedName = clientLn?.closest('IED')?.getAttribute('name') ?? '';
+            const apRef = clientLn?.closest('AccessPoint')?.getAttribute('name') ?? '';
             const clientSubNetwork = communication.querySelector(
                 `:scope > SubNetwork > ConnectedAP[iedName="${iedName}"][apName="${apRef}"]`
             )?.parentElement;

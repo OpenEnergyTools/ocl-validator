@@ -14,28 +14,44 @@ const SERVER_IED = `<IED name="ServerIED">
             <LDevice inst="LD1">
                 <LN0 lnClass="LLN0" inst="">
                     <ReportControl name="RC1" rptID="1" confRev="1">
-                        <RptEnabled name="RP1" max="10"/>
-                    </ReportControl>
-                </LN0>
-                <LN prefix="P" lnClass="MMXU" inst="1" lnType="T1"/>
-            </LDevice>
-        </Server>
-    </AccessPoint>
-</IED>`;
-
-const RECEIVER_LN_IED = `<IED name="ReceiverIED">
-    <AccessPoint name="ReceiverAP">
-        <Server>
-            <LDevice inst="LD1">
-                <LN0 lnClass="LLN0" inst="">
-                    <ReportControl name="RC1" rptID="1" confRev="1">
                         <RptEnabled name="RP1" max="10">
-                            <ClientLN apRef="ServerAP" iedName="ServerIED" prefix="P" lnClass="MMXU" lnInst="1"/>
+                            <ClientLN apRef="ClientAP" iedName="ClientIED" prefix="P" lnClass="MMXU" lnInst="1"/>
                         </RptEnabled>
                     </ReportControl>
                 </LN0>
             </LDevice>
         </Server>
+    </AccessPoint>
+</IED>`;
+
+const SERVER_IED_WO_apRef = `<IED name="ServerIED">
+    <AccessPoint name="ServerAP">
+        <Server>
+            <LDevice inst="LD1">
+                <LN0 lnClass="LLN0" inst="">
+                    <ReportControl name="RC1" rptID="1" confRev="1">
+                        <RptEnabled name="RP1" max="10">
+                            <ClientLN iedName="ClientIED" prefix="P" lnClass="MMXU" lnInst="1"/>
+                        </RptEnabled>
+                    </ReportControl>
+                </LN0>
+            </LDevice>
+        </Server>
+    </AccessPoint>
+</IED>`;
+
+const CLIENT_IED = `<IED name="ClientIED">
+    <AccessPoint name="ClientAP">
+        <LN prefix="P" lnClass="MMXU" inst="1" lnType="T1"/>
+    </AccessPoint>
+</IED>`;
+
+const CLIENT_MULTIPLE_IED = `<IED name="ClientIED">
+    <AccessPoint name="AP1">
+        <LN prefix="P" lnClass="MMXU" inst="1" lnType="T1"/>
+    </AccessPoint>
+    <AccessPoint name="AP2">
+        <LN prefix="P" lnClass="MMXU" inst="1" lnType="T1"/>
     </AccessPoint>
 </IED>`;
 
@@ -45,38 +61,16 @@ describe('ClientLN', () => {
             const doc = parseXMLString(`<?xml version="1.0" encoding="UTF-8"?>
                 <SCL xmlns="http://www.iec.ch/61850/2003/SCL">
                     ${SERVER_IED}
-                    ${RECEIVER_LN_IED}
+                    ${CLIENT_IED}
                 </SCL>`);
             expect(ClientLN_RefersToLNodeType(doc, DOC_NAME)).toEqual([]);
         });
 
-        it('should return no issues when ClientLN refers to LN0', () => {
+        it('should return no issues when ClientLN refers to an existing LN in multi AccP Client IED', () => {
             const doc = parseXMLString(`<?xml version="1.0" encoding="UTF-8"?>
                 <SCL xmlns="http://www.iec.ch/61850/2003/SCL">
-                    <IED name="ServerIED">
-                        <AccessPoint name="ServerAP">
-                            <Server>
-                                <LDevice inst="LD1">
-                                    <LN0 lnClass="LLN0" inst=""/>
-                                </LDevice>
-                            </Server>
-                        </AccessPoint>
-                    </IED>
-                    <IED name="ReceiverIED">
-                        <AccessPoint name="ReceiverAP">
-                            <Server>
-                                <LDevice inst="LD1">
-                                    <LN0 lnClass="LLN0" inst="">
-                                        <ReportControl name="RC1" rptID="1" confRev="1">
-                                            <RptEnabled name="RP1" max="10">
-                                                <ClientLN apRef="ServerAP" iedName="ServerIED" lnClass="LLN0" lnInst=""/>
-                                            </RptEnabled>
-                                        </ReportControl>
-                                    </LN0>
-                                </LDevice>
-                            </Server>
-                        </AccessPoint>
-                    </IED>
+                    ${SERVER_IED_WO_apRef}
+                    ${CLIENT_MULTIPLE_IED}
                 </SCL>`);
             expect(ClientLN_RefersToLNodeType(doc, DOC_NAME)).toEqual([]);
         });
@@ -85,19 +79,9 @@ describe('ClientLN', () => {
             const doc = parseXMLString(`<?xml version="1.0" encoding="UTF-8"?>
                 <SCL xmlns="http://www.iec.ch/61850/2003/SCL">
                     ${SERVER_IED}
-                    <IED name="ReceiverIED">
-                        <AccessPoint name="ReceiverAP">
-                            <Server>
-                                <LDevice inst="LD1">
-                                    <LN0 lnClass="LLN0" inst="">
-                                        <ReportControl name="RC1" rptID="1" confRev="1">
-                                            <RptEnabled name="RP1" max="10">
-                                                <ClientLN apRef="ServerAP" iedName="ServerIED" prefix="P" lnClass="MMXU" lnInst="2"/>
-                                            </RptEnabled>
-                                        </ReportControl>
-                                    </LN0>
-                                </LDevice>
-                            </Server>
+                    <IED name="ClientIED">
+                        <AccessPoint name="ClientAP">
+                            <LN prefix="P" lnClass="MMXU" inst="2" lnType="T1"/>
                         </AccessPoint>
                     </IED>
                 </SCL>`);
@@ -115,21 +99,7 @@ describe('ClientLN', () => {
         it('should report ClientLN referring to a missing IED', () => {
             const doc = parseXMLString(`<?xml version="1.0" encoding="UTF-8"?>
                 <SCL xmlns="http://www.iec.ch/61850/2003/SCL">
-                    <IED name="ReceiverIED">
-                        <AccessPoint name="ReceiverAP">
-                            <Server>
-                                <LDevice inst="LD1">
-                                    <LN0 lnClass="LLN0" inst="">
-                                        <ReportControl name="RC1" rptID="1" confRev="1">
-                                            <RptEnabled name="RP1" max="10">
-                                                <ClientLN apRef="ServerAP" iedName="MissingIED" prefix="P" lnClass="MMXU" lnInst="1"/>
-                                            </RptEnabled>
-                                        </ReportControl>
-                                    </LN0>
-                                </LDevice>
-                            </Server>
-                        </AccessPoint>
-                    </IED>
+                    ${SERVER_IED}
                 </SCL>`);
             const issues = ClientLN_RefersToLNodeType(doc, DOC_NAME);
             expect(issues).toHaveLength(1);
@@ -142,17 +112,7 @@ describe('ClientLN', () => {
                     ${SERVER_IED}
                     <IED name="ReceiverIED">
                         <AccessPoint name="ReceiverAP">
-                            <Server>
-                                <LDevice inst="LD1">
-                                    <LN0 lnClass="LLN0" inst="">
-                                        <ReportControl name="RC1" rptID="1" confRev="1">
-                                            <RptEnabled name="RP1" max="10">
-                                                <ClientLN apRef="ServerAP" iedName="ServerIED" prefix="X" lnClass="MMXU" lnInst="1"/>
-                                            </RptEnabled>
-                                        </ReportControl>
-                                    </LN0>
-                                </LDevice>
-                            </Server>
+                            <LN lnClass="MMXU" inst="1" lnType="T1"/>
                         </AccessPoint>
                     </IED>
                 </SCL>`);
@@ -168,14 +128,14 @@ describe('ClientLN', () => {
                 <ConnectedAP iedName="ServerIED" apName="ServerAP"/>
             </SubNetwork>
             <SubNetwork name="Subnet2" type="8-MMS">
-                <ConnectedAP iedName="ReceiverIED" apName="ReceiverAP"/>
+                <ConnectedAP iedName="ClientIED" apName="ClientAP"/>
             </SubNetwork>
         </Communication>`;
 
         const communicationSameSubnet = `<Communication>
             <SubNetwork name="Subnet1" type="8-MMS">
                 <ConnectedAP iedName="ServerIED" apName="ServerAP"/>
-                <ConnectedAP iedName="ReceiverIED" apName="ReceiverAP"/>
+                <ConnectedAP iedName="ClientIED" apName="ClientAP"/>
             </SubNetwork>
         </Communication>`;
 
@@ -184,7 +144,7 @@ describe('ClientLN', () => {
                 <SCL xmlns="http://www.iec.ch/61850/2003/SCL">
                     ${communicationSameSubnet}
                     ${SERVER_IED}
-                    ${RECEIVER_LN_IED}
+                    ${CLIENT_IED}
                 </SCL>`);
             expect(ClientLN_Sender_and_receiver_not_in_same_subnetwork(doc, DOC_NAME)).toEqual([]);
         });
@@ -193,7 +153,7 @@ describe('ClientLN', () => {
             const doc = parseXMLString(`<?xml version="1.0" encoding="UTF-8"?>
                 <SCL xmlns="http://www.iec.ch/61850/2003/SCL">
                     ${SERVER_IED}
-                    ${RECEIVER_LN_IED}
+                    ${CLIENT_IED}
                 </SCL>`);
             expect(ClientLN_Sender_and_receiver_not_in_same_subnetwork(doc, DOC_NAME)).toEqual([]);
         });
@@ -203,7 +163,7 @@ describe('ClientLN', () => {
                 <SCL xmlns="http://www.iec.ch/61850/2003/SCL">
                     ${communicationWithSubnets}
                     ${SERVER_IED}
-                    ${RECEIVER_LN_IED}
+                    ${CLIENT_IED}
                 </SCL>`);
             const issues = ClientLN_Sender_and_receiver_not_in_same_subnetwork(doc, DOC_NAME);
             expect(issues).toHaveLength(1);
@@ -225,7 +185,7 @@ describe('ClientLN', () => {
                         </SubNetwork>
                     </Communication>
                     ${SERVER_IED}
-                    ${RECEIVER_LN_IED}
+                    ${CLIENT_IED}
                 </SCL>`);
             const issues = ClientLN_Sender_and_receiver_not_in_same_subnetwork(doc, DOC_NAME);
             expect(issues).toHaveLength(1);
@@ -237,11 +197,11 @@ describe('ClientLN', () => {
                 <SCL xmlns="http://www.iec.ch/61850/2003/SCL">
                     <Communication>
                         <SubNetwork name="Subnet1" type="8-MMS">
-                            <ConnectedAP iedName="ReceiverIED" apName="ReceiverAP"/>
+                            <ConnectedAP iedName="ClientIED" apName="ClientAP"/>
                         </SubNetwork>
                     </Communication>
                     ${SERVER_IED}
-                    ${RECEIVER_LN_IED}
+                    ${CLIENT_IED}
                 </SCL>`);
             const issues = ClientLN_Sender_and_receiver_not_in_same_subnetwork(doc, DOC_NAME);
             expect(issues).toHaveLength(1);
