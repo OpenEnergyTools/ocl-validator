@@ -1,6 +1,6 @@
 {
   "name": "@openenergytools/ocl-validator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "IEC 61850 OCL (Object Constraint Language) validator for SCL files. Validates XML documents against OCL rules for substation configuration language.",
   "license": "Apache-2.0",
   "author": "Jakob Vogelsang",
