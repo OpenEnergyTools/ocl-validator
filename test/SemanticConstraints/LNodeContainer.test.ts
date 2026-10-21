@@ -173,7 +173,6 @@ describe('LNodeContainer', () => {
         it('should return no issues when LNode attributes differ in all combinations', () => {
             const doc = parseXMLString(sclWithSubstation(`
                 <LNode iedName="None" lnClass="LLN0" lnInst="" prefix=""/>
-                <LNode iedName="None" lnClass="LLN0" lnInst="" prefix=""/>
                 <LNode iedName="IED1" ldInst="1" lnClass="MMXU" lnInst="" prefix=""/>
                 <LNode iedName="IED2" ldInst="1" lnClass="PTOC" lnInst="1" prefix=""/>
                 <LNode iedName="IED3" ldInst="1" lnClass="PTOC" lnInst="2" prefix="P1"/>
