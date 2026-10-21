@@ -155,3 +155,29 @@ export function findReferencedDataType(scl: XMLDocument, doiOrSdiOrDaiOrFcda: El
 
     return null;
 }
+
+/**
+ * Checks if the client and server are in the same SubNetwork.
+ * @param clientLNoRIedName - The `ClientLN` element or `IEDName` element.
+ * @param communication - The Communication element containing SubNetwork definitions.
+ * @returns True if the client and server are in the same SubNetwork, false otherwise.
+ */
+export function isSameSubNetwork(clientLNoRIedName: Element, communication: Element): boolean {
+    // Find Client SubNetwork
+    const iedName = getAttributeValue(clientLNoRIedName, 'iedName');
+    const apRef = getAttributeValue(clientLNoRIedName, 'apRef');
+    const clientSubNetwork = communication.querySelector(
+        `:scope > SubNetwork > ConnectedAP[iedName="${iedName}"][apName="${apRef}"]`
+    )?.parentElement;
+    if (clientSubNetwork === null) return true;
+
+    //Find Server SubNetwork
+    const serverApRef = clientLNoRIedName?.closest('AccessPoint')?.getAttribute('name');
+    const serverIedName = clientLNoRIedName?.closest('IED')?.getAttribute('name');
+    const senderSubNetwork = communication.querySelector(
+        `ConnectedAP[iedName="${serverIedName}"][apName="${serverApRef}"]`
+    )?.parentElement;
+    if (senderSubNetwork === null) return true;
+
+    return clientSubNetwork === senderSubNetwork;
+}

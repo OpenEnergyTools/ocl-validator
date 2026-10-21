@@ -1,4 +1,4 @@
-import { findReferencedClientLN, getAttributeValue } from '../Helpers/BaseSimpleTypes';
+import { findReferencedClientLN, getAttributeValue, isSameSubNetwork } from '../Helpers/BaseSimpleTypes';
 import { ValidationIssue } from '../ValidationIssue';
 
 const selector = [
@@ -30,24 +30,7 @@ export function ClientLN_Sender_and_receiver_not_in_same_subnetwork(
             const communication = scl.querySelector(':root > Communication');
             if (!communication) return false;
 
-            // Find Client SubNetwork
-            const clientLn = findReferencedClientLN(scl, clientLN);
-            const iedName = clientLn?.closest('IED')?.getAttribute('name') ?? '';
-            const apRef = clientLn?.closest('AccessPoint')?.getAttribute('name') ?? '';
-            const clientSubNetwork = communication.querySelector(
-                `:scope > SubNetwork > ConnectedAP[iedName="${iedName}"][apName="${apRef}"]`
-            )?.parentElement;
-            if (clientSubNetwork === null) return true;
-
-            //Find Server SubNetwork
-            const serverApRef = clientLN?.closest('AccessPoint')?.getAttribute('name');
-            const serverIedName = clientLN?.closest('IED')?.getAttribute('name');
-            const senderSubNetwork = communication.querySelector(
-                `ConnectedAP[iedName="${serverIedName}"][apName="${serverApRef}"]`
-            )?.parentElement;
-            if (senderSubNetwork === null) return true;
-
-            return clientSubNetwork !== senderSubNetwork;
+            return !isSameSubNetwork(clientLN, communication);
         })
         .map((clientLN) => ({
             severity: 'ERROR',
