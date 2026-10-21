@@ -26,7 +26,7 @@ export * from './GSEControl';
 export * from './IED';
 // export * from './IEDName';
 // export * from './LDevice';
-// export * from './LN';
+export * from './LN';
 // export * from './LN0';
 // export * from './LNode';
 // export * from './LNodeContainer';

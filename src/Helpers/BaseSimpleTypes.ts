@@ -36,13 +36,6 @@ export function areNamesUnique(elements: NodeListOf<Element> | HTMLCollectionOf<
     return uniqueNames.size === names.length;
 }
 
-// Helper to check uniqueness with a custom selector function
-export function areUnique<T>(elements: NodeListOf<Element> | HTMLCollectionOf<Element>, selector: (el: Element) => T): boolean {
-    const values = Array.from(elements).map(selector);
-    const uniqueValues = new Set(values);
-    return uniqueValues.size === values.length;
-}
-
 /**
  * Resolves an LN reference (iedName/ldInst/prefix/lnClass/lnInst attributes,
  * as used by Association, ClientLN, ...) to an LN0 or LN element.
@@ -80,9 +73,9 @@ export function findReferencedClientLN(scl: XMLDocument, ref: Element): Element 
     const lnInst = getAttributeValue(ref, 'lnInst');
 
     let selectorAnyLN = '';
-    if (!!apRef) 
+    if (!!apRef)
         selectorAnyLN = `IED[name="${iedName}"] > AccessPoint[name="${apRef}"] > LN[lnClass="${lnClass}"]`;
-    else 
+    else
         selectorAnyLN = `IED[name="${iedName}"] > AccessPoint > LN[lnClass="${lnClass}"]`;
 
     return Array.from(scl.querySelectorAll(selectorAnyLN)).find(ln => {
@@ -180,4 +173,12 @@ export function isSameSubNetwork(clientLNoRIedName: Element, communication: Elem
     if (senderSubNetwork === null) return true;
 
     return clientSubNetwork === senderSubNetwork;
+}
+
+// Checks if all child elements of a given parent element have unique values for a specified attribute.
+export function checkUniqueAttributeInChildElements(parent: Element, childTagName: string, attributeName: string): boolean {
+    const children = Array.from(parent.querySelectorAll(`:scope > ${childTagName}`));
+    const values = children.map(child => child.getAttribute(attributeName) || '');
+    const filtered = values.filter(v => v !== '');
+    return new Set(filtered).size === filtered.length;
 }
