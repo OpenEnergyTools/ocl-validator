@@ -32,7 +32,7 @@ export * from './LNode';
 export * from './LNodeContainer';
 export * from './LNodeType';
 // export * from './Line';
-// export * from './LogControl';
+export * from './LogControl';
 // export * from './PhysConn';
 // export * from './PowerTransformer';
 // export * from './Process';
