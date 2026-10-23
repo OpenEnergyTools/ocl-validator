@@ -4,7 +4,7 @@ export * from './AbstractConductingEquipment';
 export * from './AbstractDataObject';
 export * from './AnyLN';
 export * from './Association';
-// export * from './Bay';
+export * from './Bay';
 export * from './BDA';
 export * from './ClientLN';
 export * from './Communication';
