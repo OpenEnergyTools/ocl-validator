@@ -30,7 +30,7 @@ export * from './LN';
 export * from './LN0';
 export * from './LNode';
 export * from './LNodeContainer';
-// export * from './LNodeType';
+export * from './LNodeType';
 // export * from './Line';
 // export * from './LogControl';
 // export * from './PhysConn';
