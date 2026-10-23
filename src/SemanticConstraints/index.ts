@@ -28,7 +28,7 @@ export * from './IED';
 // export * from './LDevice';
 export * from './LN';
 export * from './LN0';
-// export * from './LNode';
+export * from './LNode';
 export * from './LNodeContainer';
 // export * from './LNodeType';
 // export * from './Line';

@@ -30,8 +30,11 @@ export function getAttributeValue(element: Element, attrName: string): string {
 }
 
 // Helper to check uniqueness of names in a collection
-export function areNamesUnique(elements: NodeListOf<Element> | HTMLCollectionOf<Element>, nameAttr: string = 'name'): boolean {
-    const names = Array.from(elements).map(el => getAttributeValue(el, nameAttr));
+export function areNamesUnique(
+    elements: NodeListOf<Element> | HTMLCollectionOf<Element>,
+    nameAttr: string = 'name'
+): boolean {
+    const names = Array.from(elements).map((el) => getAttributeValue(el, nameAttr));
     const uniqueNames = new Set(names);
     return uniqueNames.size === names.length;
 }
@@ -42,7 +45,6 @@ export function areNamesUnique(elements: NodeListOf<Element> | HTMLCollectionOf<
  * Returns null when the reference cannot be resolved.
  */
 export function findReferencedServerLN(scl: XMLDocument, ref: Element): Element | null {
-
     const iedName = getAttributeValue(ref, 'iedName');
     const ldInst = getAttributeValue(ref, 'ldInst');
     const prefix = getAttributeValue(ref, 'prefix');
@@ -52,11 +54,13 @@ export function findReferencedServerLN(scl: XMLDocument, ref: Element): Element 
     const base = `:root > IED[name="${iedName}"] > AccessPoint > Server > LDevice[inst="${ldInst}"] > `;
     const selectorAnyLN = `${base}LN0[lnClass="${lnClass}"], ${base}LN[lnClass="${lnClass}"]`;
 
-    return Array.from(scl.querySelectorAll(selectorAnyLN)).find(ln => {
-        if (prefix !== getAttributeValue(ln, 'prefix')) return false;
-        if (lnInst !== getAttributeValue(ln, 'inst')) return false;
-        return true;
-    }) || null;
+    return (
+        Array.from(scl.querySelectorAll(selectorAnyLN)).find((ln) => {
+            if (prefix !== getAttributeValue(ln, 'prefix')) return false;
+            if (lnInst !== getAttributeValue(ln, 'inst')) return false;
+            return true;
+        }) || null
+    );
 }
 
 /**
@@ -65,7 +69,6 @@ export function findReferencedServerLN(scl: XMLDocument, ref: Element): Element 
  * Returns null when the reference cannot be resolved.
  */
 export function findReferencedClientLN(scl: XMLDocument, ref: Element): Element | null {
-
     const iedName = getAttributeValue(ref, 'iedName');
     const apRef = getAttributeValue(ref, 'apRef');
     const prefix = getAttributeValue(ref, 'prefix');
@@ -73,16 +76,16 @@ export function findReferencedClientLN(scl: XMLDocument, ref: Element): Element 
     const lnInst = getAttributeValue(ref, 'lnInst');
 
     let selectorAnyLN = '';
-    if (!!apRef)
-        selectorAnyLN = `IED[name="${iedName}"] > AccessPoint[name="${apRef}"] > LN[lnClass="${lnClass}"]`;
-    else
-        selectorAnyLN = `IED[name="${iedName}"] > AccessPoint > LN[lnClass="${lnClass}"]`;
+    if (!!apRef) selectorAnyLN = `IED[name="${iedName}"] > AccessPoint[name="${apRef}"] > LN[lnClass="${lnClass}"]`;
+    else selectorAnyLN = `IED[name="${iedName}"] > AccessPoint > LN[lnClass="${lnClass}"]`;
 
-    return Array.from(scl.querySelectorAll(selectorAnyLN)).find(ln => {
-        if (prefix !== getAttributeValue(ln, 'prefix')) return false;
-        if (lnInst !== getAttributeValue(ln, 'inst')) return false;
-        return true;
-    }) || null;
+    return (
+        Array.from(scl.querySelectorAll(selectorAnyLN)).find((ln) => {
+            if (prefix !== getAttributeValue(ln, 'prefix')) return false;
+            if (lnInst !== getAttributeValue(ln, 'inst')) return false;
+            return true;
+        }) || null
+    );
 }
 
 /**
@@ -92,7 +95,6 @@ export function findReferencedClientLN(scl: XMLDocument, ref: Element): Element 
  * Returns null when the reference cannot be resolved.
  */
 export function findReferencedDataType(scl: XMLDocument, doiOrSdiOrDaiOrFcda: Element): Element | null {
-
     const dataTypeTemplates = scl.querySelector(':root > DataTypeTemplates');
     if (!dataTypeTemplates) return null;
 
@@ -110,18 +112,20 @@ export function findReferencedDataType(scl: XMLDocument, doiOrSdiOrDaiOrFcda: El
 
         const selector = [
             `:root > IED[name="${iedName}"] > AccessPoint > Server > LDevice[inst="${ldInst}"] > LN0[lnClass="${lnClass}"]`,
-            `:root > IED[name="${iedName}"] > AccessPoint > Server > LDevice[inst="${ldInst}"] > LN[lnClass="${lnClass}"]`
+            `:root > IED[name="${iedName}"] > AccessPoint > Server > LDevice[inst="${ldInst}"] > LN[lnClass="${lnClass}"]`,
         ];
 
-        lnType = Array.from(scl.querySelectorAll(selector.join(', '))).find(ln => {
-            if (prefix !== getAttributeValue(ln, 'prefix')) return false;
-            if (lnInst !== getAttributeValue(ln, 'inst')) return false;
-            return true;
-        })?.getAttribute('lnType') || '';
+        lnType =
+            Array.from(scl.querySelectorAll(selector.join(', ')))
+                .find((ln) => {
+                    if (prefix !== getAttributeValue(ln, 'prefix')) return false;
+                    if (lnInst !== getAttributeValue(ln, 'inst')) return false;
+                    return true;
+                })
+                ?.getAttribute('lnType') || '';
 
         reference.push(...doName.split('.'));
         if (!!daName) reference.push(...daName.split('.'));
-
     } else {
         const doiOrSdiOrDai = doiOrSdiOrDaiOrFcda;
         reference.push(doiOrSdiOrDai.getAttribute('name') || '');
@@ -138,12 +142,18 @@ export function findReferencedDataType(scl: XMLDocument, doiOrSdiOrDaiOrFcda: El
     for (const ref of reference) {
         if (!dataType) return null;
 
-        let child: Element | null = dataType.querySelector(`:scope > DO[name="${ref}"], :scope > SDO[name="${ref}"], :scope > DA[name="${ref}"], :scope > BDA[name="${ref}"]`) || null;
+        let child: Element | null =
+            dataType.querySelector(
+                `:scope > DO[name="${ref}"], :scope > SDO[name="${ref}"], :scope > DA[name="${ref}"], :scope > BDA[name="${ref}"]`
+            ) || null;
 
         if (!child) return null;
         if (child && reference[reference.length - 1] === ref) return child;
 
-        dataType = dataTypeTemplates?.querySelector(`:scope >DOType[id="${child.getAttribute('type')}"], :scope > DAType[id="${child.getAttribute('type')}"]`) || null;
+        dataType =
+            dataTypeTemplates?.querySelector(
+                `:scope >DOType[id="${child.getAttribute('type')}"], :scope > DAType[id="${child.getAttribute('type')}"]`
+            ) || null;
     }
 
     return null;
@@ -176,9 +186,147 @@ export function isSameSubNetwork(clientLNoRIedName: Element, communication: Elem
 }
 
 // Checks if all child elements of a given parent element have unique values for a specified attribute.
-export function checkUniqueAttributeInChildElements(parent: Element, childTagName: string, attributeName: string): boolean {
+export function checkUniqueAttributeInChildElements(
+    parent: Element,
+    childTagName: string,
+    attributeName: string
+): boolean {
     const children = Array.from(parent.querySelectorAll(`:scope > ${childTagName}`));
-    const values = children.map(child => child.getAttribute(attributeName) || '');
-    const filtered = values.filter(v => v !== '');
+    const values = children.map((child) => child.getAttribute(attributeName) || '');
+    const filtered = values.filter((v) => v !== '');
     return new Set(filtered).size === filtered.length;
+}
+
+/**
+ * Finds the referenced LN or LN0 element in the SCL document based on the LNode attributes.
+ * Uses iedName, ldInst, lnClass, prefix, and lnInst to locate the matching element.
+ * Returns null if no matching element is found.
+ */
+export function findReferencedServerAnyLN(scl: XMLDocument, lNode: Element): Element | null {
+    const iedName = getAttributeValue(lNode, 'iedName');
+    const ldInst = getAttributeValue(lNode, 'ldInst');
+
+    const lnClass = getAttributeValue(lNode, 'lnClass');
+    const prefix = getAttributeValue(lNode, 'prefix');
+    const lnInst = getAttributeValue(lNode, 'lnInst');
+
+    const selector = [
+        `:scope > IED[name="${iedName}"] > AccessPoint > Server > LDevice[inst="${ldInst}"] > LN[lnClass="${lnClass}"]`,
+        `:scope > IED[name="${iedName}"] > AccessPoint > Server > LDevice[inst="${ldInst}"] > LN0[lnClass="${lnClass}"]`,
+    ];
+
+    return (
+        Array.from(scl.querySelectorAll(selector.join(','))).find(
+            (anyLn) => (anyLn.getAttribute('prefix') || '') === prefix && (anyLn.getAttribute('inst') || '') === lnInst
+        ) || null
+    );
+}
+
+/**
+ * Recursively finds missing DO or SDO elements between two data types.
+ * Compares elements by name and type, and recursively checks nested data types.
+ * Returns an array of missing elements from the first data type (ours) that are not present in the second (theirs).
+ */
+export function findMissingDOorSDO(scl: XMLDocument, oursDataType: Element, theirsDataType: Element): Element[] {
+    const dtt = scl.querySelector(':root > DataTypeTemplates')!;
+    const missing: Element[] = [];
+
+    const resolve = (id: string | null): Element | null =>
+        dtt ? dtt.querySelector(`DOType[id="${id}"], DAType[id="${id}"], EnumType[id="${id}"]`) : null;
+
+    Array.from(oursDataType.querySelectorAll(':scope > DO, :scope > SDO')).forEach((doOrSdo) => {
+        const theirsDoOrSdo = theirsDataType.querySelector(
+            `:scope > ${doOrSdo.tagName}[name="${doOrSdo.getAttribute('name')}"]`
+        );
+
+        if (!theirsDoOrSdo) {
+            missing.push(doOrSdo);
+            return;
+        }
+
+        const oursChildDataType = resolve(doOrSdo.getAttribute('type'));
+        const theirChildDataType = resolve(theirsDoOrSdo.getAttribute('type'));
+
+        if (!oursChildDataType) return;
+        if (oursChildDataType && !theirChildDataType)
+            missing.push(...Array.from(oursChildDataType.querySelectorAll(':scope > DO, :scope > SDO')));
+
+        missing.push(...findMissingDOorSDO(scl, oursChildDataType, theirChildDataType!));
+    });
+    return missing;
+}
+
+/**
+ * Recursively finds missing DA, BDA, or EnumVal elements between two data types.
+ * For EnumVal, matches by ord and textContent. For other elements, matches by name.
+ * Also checks bType attribute equality and recursively compares nested data types.
+ * Returns an array of missing elements from the first data type that are not present in the second.
+ */
+export function findMissingDAorBDAorEnumVal(
+    scl: XMLDocument,
+    oursDataType: Element,
+    theirsDataType: Element
+): Element[] {
+    const dtt = scl.querySelector(':root > DataTypeTemplates')!;
+    const missing: Element[] = [];
+
+    const resolve = (id: string | null): Element | null =>
+        dtt ? dtt.querySelector(`DOType[id="${id}"], DAType[id="${id}"], EnumType[id="${id}"]`) : null;
+
+    Array.from(
+        oursDataType.querySelectorAll(':scope > DO, :scope > SDO, :scope > DA, :scope > BDA, :scope > EnumVal')
+    ).forEach((oursDoOrSdoOrDaOrBdaOrEnumVal) => {
+        let theirsDoOrSdoOrDaOrBdaOrEnumVal: Element | null = null;
+        if (oursDoOrSdoOrDaOrBdaOrEnumVal.tagName === 'EnumVal') {
+            const oursOrd = oursDoOrSdoOrDaOrBdaOrEnumVal.getAttribute('ord');
+            const oursContent = oursDoOrSdoOrDaOrBdaOrEnumVal.textContent;
+            theirsDoOrSdoOrDaOrBdaOrEnumVal =
+                Array.from(
+                    theirsDataType.querySelectorAll(
+                        `:scope > ${oursDoOrSdoOrDaOrBdaOrEnumVal.tagName}[ord="${oursOrd}"]`
+                    )
+                ).find((el) => el.textContent === oursContent) || null;
+
+            // console.log('oursOrd:', oursOrd, 'oursContent:', oursContent, 'theirsDoOrSdoOrDaOrBdaOrEnumVal:', theirsDoOrSdoOrDaOrBdaOrEnumVal);
+        } else {
+            theirsDoOrSdoOrDaOrBdaOrEnumVal = theirsDataType.querySelector(
+                `:scope > ${oursDoOrSdoOrDaOrBdaOrEnumVal.tagName}[name="${oursDoOrSdoOrDaOrBdaOrEnumVal.getAttribute('name')}"]`
+            );
+        }
+
+        const isDoOrSdo =
+            oursDoOrSdoOrDaOrBdaOrEnumVal.tagName === 'DO' || oursDoOrSdoOrDaOrBdaOrEnumVal.tagName === 'SDO';
+        if (!theirsDoOrSdoOrDaOrBdaOrEnumVal) {
+            if (isDoOrSdo) return;
+
+            missing.push(oursDoOrSdoOrDaOrBdaOrEnumVal);
+            return;
+        }
+
+        if (
+            oursDoOrSdoOrDaOrBdaOrEnumVal.getAttribute('bType') !==
+            theirsDoOrSdoOrDaOrBdaOrEnumVal.getAttribute('bType')
+        ) {
+            missing.push(oursDoOrSdoOrDaOrBdaOrEnumVal);
+            return;
+        }
+
+        const oursChildDataType = resolve(oursDoOrSdoOrDaOrBdaOrEnumVal.getAttribute('type'));
+        const theirChildDataType = resolve(theirsDoOrSdoOrDaOrBdaOrEnumVal.getAttribute('type'));
+
+        if (!oursChildDataType) return;
+
+        if (!theirChildDataType) {
+            if (!oursChildDataType) return;
+            else {
+                missing.push(
+                    ...Array.from(oursChildDataType.querySelectorAll(':scope > DA, :scope > BDA, :scope > EnumVal'))
+                );
+                return;
+            }
+        }
+
+        missing.push(...findMissingDAorBDAorEnumVal(scl, oursChildDataType, theirChildDataType));
+    });
+    return missing;
 }
