@@ -51,7 +51,7 @@
     "test:required-elements": "vitest run test/RequiredElements/",
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"src/validate.ts\" \"src/ValidationIssue.ts\" \"src/index.ts\" \"src/RequiredElements/**/*.ts\" \"src/SemanticConstraints/**/*.ts\" \"test/validate*.ts\"",
+    "format": "prettier --write \"src/validate.ts\" \"src/ValidationIssue.ts\" \"src/index.ts\" \"src/RequiredElements/**/*.ts\" \"src/SemanticConstraints/**/*.ts\" \"test/validate*.ts\" \"src/Helpers/**/*.ts\"",
     "format:check": "prettier --check \"src/validate.ts\" \"src/ValidationIssue.ts\" \"src/index.ts\" \"src/RequiredElements/**/*.ts\" \"test/validate*.ts\"",
     "prepare": "npm run build"
   },
