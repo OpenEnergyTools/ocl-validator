@@ -17,7 +17,7 @@ export * from './DAI';
 export * from './DAType';
 export * from './DOI';
 // export * from './DOType';
-// export * from './EquipmentContainer';
+export * from './EquipmentContainer';
 export * from './FCDA';
 // export * from './GeneralEquipment';
 export * from './GSE';
